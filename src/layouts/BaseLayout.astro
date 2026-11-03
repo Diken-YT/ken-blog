@@ -1,0 +1,44 @@
+---
+import '../styles/global.css';
+import { SITE_TITLE, SITE_DESCRIPTION, MAIN_SITE } from '../consts';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+const { title, description = SITE_DESCRIPTION } = Astro.props;
+const pageTitle = title ? `${title} | ${SITE_TITLE}` : SITE_TITLE;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title={SITE_TITLE} href="/rss.xml" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a class="brand" href="/">{SITE_TITLE}</a>
+        <a href="/blog/">Posts</a>
+        <a href="/about/">About</a>
+        <a href={MAIN_SITE}>Portfolio</a>
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer>
+      © {new Date().getFullYear()} Ken · <a href="/rss.xml">RSS</a>
+    </footer>
+  </body>
+</html>
